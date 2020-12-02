@@ -1,0 +1,80 @@
+
+import java.util.Objects;
+import java.util.Random;
+
+public class Person {
+    private int age;
+    private int deathAge;
+    private boolean married;
+    private String sexual;
+    private String colorOfEye;
+    private int familyID;
+
+    Random random = new Random();
+
+    public Person(int familyID,int age, boolean married, String sexual, String colorOfEye) {
+        this.familyID = hashCode();
+        this.age = age;
+        this.deathAge = random.nextInt(41)+30;
+        this.married = married;
+        this.sexual = sexual;
+        this.colorOfEye = colorOfEye;
+
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return age == person.age &&
+                deathAge == person.deathAge &&
+                married == person.married &&
+                familyID == person.familyID &&
+                Objects.equals(sexual, person.sexual) &&
+                Objects.equals(colorOfEye, person.colorOfEye) &&
+                Objects.equals(random, person.random);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(age, deathAge, married, sexual, colorOfEye, familyID, random);
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+
+    public int getDeathAge() {
+        return deathAge;
+    }
+
+
+    public void setMarried(boolean married) {
+        this.married = married;
+    }
+
+    public String getSexual() {
+        return sexual;
+    }
+
+    public String getColorOfEye() {
+        return colorOfEye;
+    }
+
+
+    public int getFamilyID() {
+        return familyID;
+    }
+
+    public void setFamilyID(int familyID) {
+        this.familyID = familyID;
+    }
+
+    public void PassAYear() {
+        age++;
+    }
+}
+
+
