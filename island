@@ -1,0 +1,141 @@
+package com.company;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
+
+
+public  class island {
+
+    ArrayList<Person> PersonList = new ArrayList<>();
+
+    ArrayList<Person> QualifiedToMarry_MAN = new ArrayList<>();
+    ArrayList<Person> QualifiedToMarry_WOMAN = new ArrayList<>();
+    ArrayList<Person> Couple = new ArrayList<>();
+    ArrayList<Integer> Populaton = new ArrayList<>();
+    ArrayList<Integer> BlueEyes = new ArrayList<>();
+
+
+    Random random = new Random();
+
+    public void island(int years) {
+
+        //People
+        for (int j = 0; j < 5000; j++) {
+            Person a = new Person(hashCode(), 10, false, "MALE", "BLACK");
+            PersonList.add(a);
+        }
+        for (int j = 0; j < 4990; j++) {
+            Person a = new Person(hashCode(), 10, false, "FEMALE", "BLACK");
+            PersonList.add(a);
+        }
+        for (int j = 0; j < 10; j++) {
+            Person a = new Person(hashCode(), 10, false, "FEMALE", "BLUE");
+            PersonList.add(a);
+        }
+
+        //LIVING
+        for (int i = 1; i < years + 1; i++) {
+
+            int blueEyes = 0;
+            for (int j = 0; j < PersonList.size(); j++) {
+                if (PersonList.get(j).getColorOfEye().equals("BLUE"))
+                    blueEyes++;
+            }
+            Populaton.add(PersonList.size());
+            BlueEyes.add(blueEyes);
+
+            System.out.println(i);
+            System.out.println(Populaton);
+            System.out.println(BlueEyes);
+
+            // Qualification to Marry
+            for (int j = 0; j < PersonList.size(); j++) {
+                if (PersonList.get(j).getAge() == 20 && PersonList.get(j).getSexual().equals("MALE"))
+                    QualifiedToMarry_MAN.add(PersonList.get(j));
+                if (PersonList.get(j).getAge() == 20 && PersonList.get(j).getSexual().equals("FEMALE"))
+                    QualifiedToMarry_WOMAN.add(PersonList.get(j));
+            }
+            // Marry
+            while (QualifiedToMarry_MAN.size() != 0 && QualifiedToMarry_WOMAN.size() != 0) {
+                Person man = QualifiedToMarry_MAN.get(0);
+                for (int k = 0; k < QualifiedToMarry_WOMAN.size(); k++) {
+                    Person woman = QualifiedToMarry_WOMAN.get(k);
+
+                    if (man.getFamilyID() != woman.getFamilyID()) {
+                        man.setMarried(true);
+                        woman.setMarried(true);
+                        woman.setFamilyID(man.getFamilyID());
+                        Couple.add(man);
+                        Couple.add(woman);
+                        QualifiedToMarry_MAN.remove(man);
+                        QualifiedToMarry_WOMAN.remove(woman);
+                        break;
+                    }
+                }
+                QualifiedToMarry_MAN.remove(man);
+            }
+
+            // Having Baby
+            for (int ch = 0; ch < Couple.size(); ch++) {
+                if (Couple.get(ch).getAge() == 25) {
+                    int Baby = random.nextInt(3) + 1;
+                    int Baby_Sexual;
+                    for (int B = 0; B < Baby; B++) {
+                        Baby_Sexual = random.nextInt(2);
+                        if (Baby_Sexual == 0) {
+                            if (Couple.get(ch).getSexual().equals("FEMALE") && Couple.get(ch).getColorOfEye().equals("BLACK")) {
+                                Person a = new Person(Couple.get(ch).getFamilyID(), 0, false, "MALE", "BLACK");
+                                PersonList.add(a);
+                            } else if (Couple.get(ch).getSexual().equals("FEMALE") && Couple.get(ch).getColorOfEye().equals("BLUE")) {
+                                Person a = new Person(Couple.get(ch).getFamilyID(), 0, false, "MALE", "BLUE");
+                                PersonList.add(a);
+                            }
+
+                        } else if (Baby_Sexual == 1) {
+                            if (Couple.get(ch).getSexual().equals("FEMALE") && Couple.get(ch).getColorOfEye().equals("BLACK")) {
+                                Person a = new Person(Couple.get(ch).getFamilyID(), 0, false, "FEMALE", "BLACK");
+                                PersonList.add(a);
+                            } else if (Couple.get(ch).getSexual().equals("FEMALE") && Couple.get(ch).getColorOfEye().equals("BLUE")) {
+                                Person a = new Person(Couple.get(ch).getFamilyID(), 0, false, "FEMALE", "BLUE");
+                                PersonList.add(a);
+                            }
+                        }
+                    }
+                }
+            }
+
+            Iterator<Person> iterator1 = Couple.iterator();
+            while (iterator1.hasNext()) {
+                if (iterator1.next().getAge() > 25)
+                    iterator1.remove();
+            }
+            QualifiedToMarry_WOMAN.clear();
+            QualifiedToMarry_MAN.clear();
+            // Death
+            Iterator<Person> iterator = PersonList.iterator();
+            while (iterator.hasNext()) {
+                Person person = iterator.next();
+                if (person.getAge() == person.getDeathAge()) {
+                    iterator.remove();
+                }
+            }
+            // Age++
+            for (int j = 0; j < PersonList.size(); j++) {
+                PersonList.get(j).PassAYear();
+            }
+
+
+        }
+
+    }
+
+
+    public static void main(String[] args) { 
+        island i = new island();
+        i.island(2000);
+            
+    }
+
+}
